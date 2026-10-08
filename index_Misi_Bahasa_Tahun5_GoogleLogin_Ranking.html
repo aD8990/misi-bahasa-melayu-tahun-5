@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misi Bahasa Tahun 5</title>
+<style>
+:root{--bg:#071426;--card:#10233d;--card2:#142b49;--text:#f5f7fb;--muted:#b8c6d9;--accent:#ffd166;--good:#43d17c;--bad:#ff6b6b;--blue:#4dabf7}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at top,#16345c,#071426 55%);color:var(--text);min-height:100vh}
+.wrap{max-width:900px;margin:auto;padding:18px}.hero,.panel{background:rgba(16,35,61,.96);border:1px solid #29496e;border-radius:22px;padding:20px;margin-bottom:15px;box-shadow:0 12px 35px #0004}
+h1{margin:5px 0;font-size:clamp(26px,5vw,42px)}p{color:var(--muted);line-height:1.55}.tag{font-weight:800;color:var(--accent);letter-spacing:.06em}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.stat{background:#091a30;border:1px solid #31547b;padding:9px 13px;border-radius:13px;font-weight:800}
+.progress{height:10px;background:#071426;border-radius:99px;overflow:hidden;margin-top:15px}.bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--accent));width:2%;transition:.25s}
+.level{margin-top:9px;font-weight:700;color:#dce7f5}.cat{display:inline-block;background:#091a30;border:1px solid #31547b;border-radius:99px;padding:7px 11px;font-size:13px;font-weight:800}
+.passage{white-space:pre-line;background:#091a30;border-left:4px solid var(--accent);padding:15px;border-radius:12px;margin-top:15px;line-height:1.6;color:#e8eef7}
+.question{font-size:clamp(20px,3vw,27px);font-weight:850;line-height:1.35;margin:18px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+button{font:inherit}.ans,.primary{border:1px solid #31547b;border-radius:14px;padding:14px;color:var(--text);cursor:pointer;min-height:56px}.ans{background:var(--card2);text-align:left;font-weight:700}.ans:hover{border-color:var(--accent);transform:translateY(-1px)}.ans:disabled{cursor:default}.correct{outline:3px solid var(--good);background:#103b2a}.wrong{outline:3px solid var(--bad);opacity:.75}.primary{background:var(--accent);color:#172033;font-weight:900;border:0;margin-top:13px}.feedback{margin-top:14px;padding:14px;border-radius:13px;background:#091a30;line-height:1.5;font-weight:700}.hidden{display:none!important}.center{text-align:center}.big{font-size:60px}.scorebig{font-size:42px;font-weight:950;color:var(--accent)}.start input{width:100%;padding:14px;border-radius:12px;border:1px solid #31547b;background:#091a30;color:white;font-size:16px;margin:6px 0 8px}.start label{font-weight:750;display:block;margin-top:8px}.small{font-size:13px;color:var(--muted)}
+@media(max-width:600px){.answers{grid-template-columns:1fr}.wrap{padding:10px}.hero,.panel{padding:16px;border-radius:17px}}
+
+.loginbox{margin:14px 0;padding:14px;border:1px solid #31547b;border-radius:14px;background:#091a30}
+.loginok{padding:10px 12px;border-radius:10px;background:#103b2a;margin-top:10px;font-weight:800}
+.rankbox{margin-top:18px;text-align:left;overflow:auto}
+.rankbox table{width:100%;border-collapse:collapse;min-width:520px}
+.rankbox th,.rankbox td{padding:10px;border-bottom:1px solid #31547b;text-align:left}
+.rankbox th{color:var(--accent)}
+.secondary{background:#17304f;color:white;border:1px solid #31547b;border-radius:14px;padding:12px 16px;font-weight:850;cursor:pointer;margin-top:10px}
+
+</style></head>
+<body><main class="wrap">
+<section class="hero">
+<div class="tag">BAHASA MELAYU • TAHUN 5</div><h1>🏰 Misi Bahasa: Selamatkan Kota Kata!</h1>
+<p>Takluki 50 cabaran Bahasa Melayu. Kumpul markah, bina streak 🔥 dan cuba sampai ke Istana Bahasa!</p>
+<div id="stats" class="stats hidden"><div class="stat">⭐ <span id="score">0</span></div><div class="stat">❤️ <span id="lives">5</span></div><div class="stat">🔥 <span id="streak">0</span></div><div class="stat">🎯 <span id="counter">1/50</span></div><div class="stat">⏱️ <span id="timer">00:00</span></div></div>
+<div id="prog" class="progress hidden"><div id="bar" class="bar"></div></div><div id="level" class="level hidden"></div>
+</section>
+<section id="start" class="panel start">
+<h2>🎮 Sedia untuk bermula?</h2>
+<div class="loginbox">
+  <div id="loginPrompt">
+    <b>🔐 Log masuk Google / DELIMa dahulu</b>
+    <p class="small">Akaun digunakan untuk mengenal pasti percubaan pertama bagi ranking utama.</p>
+    <div id="g_id_onload"
+      data-client_id="245445865484-schv3jfda0unqju4gpb7dgtookd9t9gn.apps.googleusercontent.com"
+      data-callback="handleCredentialResponse"
+      data-auto_prompt="false"></div>
+    <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+  </div>
+  <div id="loginOk" class="loginok hidden">✅ Log masuk sebagai <span id="loginEmail"></span></div>
+</div>
+<div id="playerFields" class="hidden">
+<label>Nama murid</label><input id="name" maxlength="40" placeholder="Contoh: Ahmad Danish">
+<label>Kelas</label><input id="className" maxlength="20" placeholder="Contoh: 5 IB">
+<button id="startBtn" class="primary">🚀 MULAKAN MISI</button>
+</div>
+<p class="small">Setiap jawapan betul = 10 mata. Streak 3 atau lebih = 15 mata. Anda mempunyai 5 nyawa. ⏱️ Masa bermula apabila anda menekan MULAKAN MISI. Ranking utama menggunakan percubaan pertama bagi setiap akaun Google/DELIMa.</p>
+<button id="showRankStart" class="secondary">🏆 LIHAT RANKING</button>
+<div id="rankStart" class="rankbox hidden"></div>
+</section>
+<section id="play" class="panel hidden"><span id="cat" class="cat"></span><div id="passage" class="passage hidden"></div><div id="q" class="question"></div><div id="answers" class="answers"></div><div id="feedback" class="feedback hidden" aria-live="polite"></div><button id="next" class="primary hidden">Cabaran Seterusnya ➜</button></section>
+<section id="result" class="panel center hidden">
+<div id="emoji" class="big">🏆</div><h2>Misi Tamat!</h2><p id="who"></p><div id="final" class="scorebig"></div>
+<p id="correctTotal"></p><p id="timeResult" style="font-size:22px;font-weight:900;color:var(--accent)"></p>
+<p id="rankRule" class="small">🏅 Ranking utama menggunakan percubaan pertama setiap akaun. Kedudukan ditentukan mengikut jumlah jawapan betul paling banyak, kemudian masa terpantas.</p>
+<p id="resultText"></p><p id="sendStatus" class="feedback">⏳ Menghantar keputusan...</p>
+<button id="playAgain" class="primary">🔁 MAIN SEMULA</button>
+<button id="showRankResult" class="secondary">🏆 LIHAT RANKING</button>
+<div id="rankResult" class="rankbox hidden"></div>
+</section>
+</main>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+const P='Pada hari Sabtu, penduduk Kampung Harmoni mengadakan aktiviti gotong-royong. Amir dan rakan-rakannya membersihkan longkang, manakala beberapa orang dewasa memotong rumput. Selepas selesai, kawasan kampung menjadi bersih dan ceria. Ketua kampung mengucapkan terima kasih kepada semua penduduk.';
+const P2='Aina gemar membaca buku sejak kecil. Setiap petang, dia akan meluangkan masa selama tiga puluh minit di sudut bacaan rumahnya. Selain menambah ilmu, membaca juga membantunya mempelajari banyak perkataan baharu. Aina bercita-cita untuk menjadi seorang penulis pada masa hadapan.';
+const Q=[
+['Kata Adjektif','Air sungai itu sangat _____ selepas hujan lebat.',['jernih','keruh','harum','nyaring'],1,'“Keruh” menerangkan air yang tidak jernih.'],
+['Penjodoh Bilangan','Penjodoh bilangan yang sesuai untuk pisang ialah...',['seutas','sesikat','sehelai','sebatang'],1,'Kita menyebut “sesikat pisang”.'],
+['Imbuhan','Ibu sedang _____ sayur di dapur.',['potong','memotong','terpotong','dipotong'],1,'“Memotong” ialah kata kerja aktif yang tepat.'],
+['Simpulan Bahasa','Apakah maksud “ringan tulang”?',['Kurus','Rajin bekerja','Cepat berlari','Suka tidur'],1,'“Ringan tulang” bermaksud rajin bekerja atau membantu.'],
+['Kata Ganda','Pilih ayat yang betul.',['Murid-murid sedang beratur.','Para murid-murid sedang beratur.','Semua murid-murid sedang beratur.','Murid sedang-sedang beratur.'],0,'“Murid-murid sedang beratur” menggunakan kata ganda dengan tepat.'],
+['Melengkapkan Ayat','Siti membawa payung _____ hari kelihatan mendung.',['tetapi','kerana','atau','sambil'],1,'“Kerana” menunjukkan sebab.'],
+['Antonim','Lawan kata bagi “rajin” ialah...',['tekun','malas','cekap','pantas'],1,'Antonim “rajin” ialah “malas”.'],
+['Sinonim','Perkataan yang sama maksud dengan “gembira” ialah...',['sedih','marah','riang','takut'],2,'“Riang” hampir sama maksud dengan “gembira”.'],
+['Kata Nama Khas','Yang manakah kata nama khas?',['sekolah','Johor Bahru','bandar','guru'],1,'“Johor Bahru” ialah nama khas tempat.'],
+['Kata Kerja','Ayah sedang _____ kereta di halaman rumah.',['cantik','mencuci','bersih','tinggi'],1,'“Mencuci” ialah kata kerja.'],
+['Peribahasa','Peribahasa yang menggambarkan kerjasama ialah...',['Bagai aur dengan tebing','Bagai anjing dengan kucing','Seperti katak di bawah tempurung','Bagai mencurah air ke daun keladi'],0,'“Bagai aur dengan tebing” bermaksud saling membantu.'],
+['Penjodoh Bilangan','Nenek membeli _____ kain batik.',['sehelai','sebuah','sebiji','seekor'],0,'Kain menggunakan penjodoh bilangan “helai”.'],
+['Melengkapkan Ayat','Hakim _____ basikal ke sekolah setiap pagi.',['menunggang','menaiki pada','berjalan basikal','memakai'],0,'Kita “menunggang basikal”.'],
+['Kata Adjektif','Bunga mawar itu berbau sangat _____.',['masin','harum','bising','kasar'],1,'“Harum” menerangkan bau yang menyenangkan.'],
+['Simpulan Bahasa','“Buah tangan” bermaksud...',['buah-buahan','hadiah yang dibawa pulang','hasil tanaman','makanan ringan'],1,'“Buah tangan” ialah hadiah yang dibawa pulang.'],
+['Kata Tanya','_____ nama guru kelas kamu?',['Siapakah','Apakah','Bilakah','Mengapakah'],0,'“Siapakah” digunakan untuk menanyakan orang.'],
+['Melengkapkan Ayat','Kita mestilah menjaga kebersihan _____ kesihatan sentiasa terpelihara.',['supaya','walaupun','sambil','kerana'],0,'“Supaya” menunjukkan tujuan.'],
+['Kata Sendi Nama','Buku itu diletakkan _____ atas meja.',['di','ke','dari','daripada'],0,'“Di” digunakan untuk menunjukkan tempat.'],
+['Kata Sendi Nama','Farah pergi _____ perpustakaan selepas sekolah.',['di','ke','daripada','pada'],1,'“Ke” menunjukkan arah atau tempat yang dituju.'],
+['Tatabahasa','Pilih ayat yang betul.',['Mereka-mereka bermain bola.','Mereka bermain bola.','Para mereka bermain bola.','Mereka semua-semua bermain bola.'],1,'“Mereka” sudah menunjukkan jamak.'],
+['Peribahasa','“Sediakan payung sebelum hujan” bermaksud...',['Membawa payung setiap hari','Bersedia sebelum menghadapi masalah','Takut akan hujan','Duduk di rumah'],1,'Peribahasa ini mengajar kita membuat persediaan awal.'],
+['Simpulan Bahasa','“Panjang tangan” bermaksud...',['Suka menolong','Suka mencuri','Tangan yang panjang','Rajin bekerja'],1,'“Panjang tangan” bermaksud suka mencuri.'],
+['Melengkapkan Ayat','Walaupun letih, Danish _____ menyiapkan kerja sekolahnya.',['tetap','kerana','sambil','atau'],0,'“Tetap” menunjukkan tindakan diteruskan walaupun letih.'],
+['Imbuhan','Pilih perkataan yang betul: “Kakak sedang _____ bunga di halaman.”',['menyiram','siraman','disiramkan','penyiram'],0,'“Menyiram” ialah kata kerja aktif yang sesuai.'],
+['Kosa Kata','Apakah maksud “tekun”?',['Rajin dan bersungguh-sungguh','Sangat marah','Cepat berputus asa','Suka bergurau'],0,'“Tekun” bermaksud rajin dan bersungguh-sungguh.'],
+['Kesalahan Bahasa','Pilih ayat yang betul.',['Ali paling tertinggi di kelas.','Ali paling tinggi di kelas.','Ali sangat tertinggi di kelas.','Ali teramat tertinggi di kelas.'],1,'“Paling tinggi” sudah menunjukkan darjah penghabisan.'],
+['Penjodoh Bilangan','Polis menemui _____ pistol di dalam kereta.',['sebilah','sepucuk','sebatang','seutas'],1,'Pistol menggunakan penjodoh bilangan “pucuk”.'],
+['Kata Majmuk','Yang manakah BUKAN kata majmuk?',['kerjasama','tanggungjawab','kereta api','berlari'],3,'“Berlari” bukan kata majmuk. Kerjasama dan tanggungjawab ialah kata majmuk yang telah mantap, manakala kereta api ialah kata majmuk yang dieja terpisah.'],
+['Melengkapkan Ayat','Murid-murid beratur dengan _____ sebelum masuk ke kelas.',['senyapnya','tertib','laju','kasarnya'],1,'“Dengan tertib” bermaksud secara teratur dan sopan.'],
+['Simpulan Bahasa','Murid yang “otak cair” biasanya...',['mudah memahami pelajaran','suka berenang','sering terlupa','malas belajar'],0,'“Otak cair” bermaksud pintar atau mudah memahami sesuatu.'],
+['Pemahaman','Apakah aktiviti yang dilakukan oleh penduduk Kampung Harmoni?',['Berkelah','Gotong-royong','Bersukan','Berniaga'],1,'Penduduk kampung mengadakan gotong-royong.',P],
+['Pemahaman','Siapakah yang membersihkan longkang?',['Ketua kampung','Amir dan rakan-rakannya','Semua orang dewasa','Guru-guru'],1,'Amir dan rakan-rakannya membersihkan longkang.',P],
+['Pemahaman','Apakah keadaan kampung selepas aktiviti tersebut?',['Gelap dan sunyi','Bersih dan ceria','Kotor dan berbau','Sesak dan bising'],1,'Kawasan kampung menjadi bersih dan ceria.',P],
+['Pemahaman','Nilai murni utama dalam petikan ialah...',['Kerjasama','Keberanian','Berjimat cermat','Berdikari'],0,'Gotong-royong menunjukkan nilai kerjasama.',P],
+['Pemahaman','Mengapakah ketua kampung mengucapkan terima kasih?',['Penduduk memberikan hadiah','Penduduk bekerjasama membersihkan kampung','Amir memenangi pertandingan','Rumput tumbuh dengan cepat'],1,'Beliau menghargai kerjasama penduduk.',P],
+['Kata Hubung','Ibu membeli ikan _____ sayur di pasar.',['dan','kerana','supaya','walaupun'],0,'“Dan” menggabungkan dua unsur yang setara.'],
+['Melengkapkan Ayat','Kita perlu bersenam secara teratur _____ badan sentiasa sihat.',['tetapi','supaya','sambil','walaupun'],1,'“Supaya” menunjukkan tujuan.'],
+['Kesalahan Bahasa','Pilih ayat yang betul.',['Dia berasal daripada Johor.','Dia berasal dari Johor.','Dia berasal ke Johor.','Dia berasal di Johor.'],1,'“Dari” digunakan untuk tempat, arah dan masa.'],
+['Kata Adjektif','Jalan itu sangat _____ kerana baru diturap.',['licin','manis','merdu','harum'],0,'“Licin” sesuai menerangkan permukaan jalan.'],
+['Peribahasa','“Sedikit-sedikit, lama-lama menjadi bukit” mengajar kita supaya...',['suka mendaki','menyimpan atau berusaha sedikit demi sedikit','bekerja tergesa-gesa','menunggu bantuan'],1,'Usaha kecil yang konsisten boleh menjadi banyak.'],
+['Pemahaman','Apakah kegemaran Aina?',['Bersukan','Membaca buku','Melukis','Memasak'],1,'Aina gemar membaca buku.',P2],
+['Pemahaman','Berapa lamakah Aina membaca setiap petang?',['10 minit','20 minit','30 minit','1 jam'],2,'Aina membaca selama tiga puluh minit.',P2],
+['Pemahaman','Apakah salah satu manfaat membaca kepada Aina?',['Menjadikannya mengantuk','Menambah ilmu','Mengurangkan masa belajar','Membuatnya lupa'],1,'Membaca membantu Aina menambah ilmu.',P2],
+['Pemahaman','Apakah cita-cita Aina?',['Guru','Doktor','Penulis','Angkasawan'],2,'Aina bercita-cita menjadi penulis.',P2],
+['Pemahaman','Apakah sikap yang dapat dicontohi daripada Aina?',['Rajin membaca','Suka membuang masa','Mudah berputus asa','Tidak suka belajar'],0,'Aina menunjukkan sikap rajin menimba ilmu.',P2],
+['Melengkapkan Ayat','Adik menangis _____ mainannya rosak.',['supaya','kerana','tetapi','dan'],1,'“Kerana” menerangkan sebab.'],
+['Simpulan Bahasa','“Mulut murai” merujuk kepada seseorang yang...',['pendiam','suka bercakap','pemarah','rajin'],1,'“Mulut murai” bermaksud suka bercakap.'],
+['Tatabahasa','Pilih penggunaan kata yang betul.',['Para-para peserta berkumpul.','Para peserta berkumpul.','Semua para peserta berkumpul.','Para peserta-peserta berkumpul.'],1,'“Para” sudah membawa maksud jamak.'],
+['Peribahasa','Apakah maksud “melentur buluh biarlah dari rebungnya”?',['Mendidik anak sejak kecil','Menanam buluh ketika kecil','Belajar apabila dewasa','Bekerja di kebun'],0,'Didikan yang baik hendaklah bermula sejak kecil.'],
+['Cabaran Akhir 👑','Pilih ayat yang paling tepat.',['Kita hendaklah saling bantu-membantu antara satu sama lain.','Kita hendaklah saling membantu antara satu sama lain.','Kita hendaklah saling membantu-membantu.','Kita hendaklah bantu saling antara satu sama lain.'],1,'“Saling membantu” ialah bentuk yang tepat.']
+];
+let i=0,score=0,lives=5,streak=0,correct=0,name='',cls='',locked=false,startTime=0,endTime=0,timerId=null,userEmail='',userGoogleName='';
+function formatTime(ms){let total=Math.max(0,Math.floor(ms/1000)),m=Math.floor(total/60),sec=total%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
+function updateTimer(){if(!startTime)return;document.getElementById('timer').textContent=formatTime(Date.now()-startTime)}
+const $=x=>document.getElementById(x);
+function level(){if(i<10)return'🌱 Tahap 1 — Kampung Kata';if(i<20)return'🌳 Tahap 2 — Hutan Tatabahasa';if(i<30)return'🌉 Tahap 3 — Jambatan Ayat';if(i<40)return'📜 Tahap 4 — Gua Pemahaman';return'🏰 Tahap 5 — Istana Bahasa'}
+function draw(){if(i>=Q.length||lives<=0)return finish();locked=false;let z=Q[i];$('level').textContent=level();$('cat').textContent='🎯 '+z[0];$('counter').textContent=(i+1)+'/50';$('q').textContent=z[1];$('score').textContent=score;$('lives').textContent=lives;$('streak').textContent=streak;$('bar').style.width=((i+1)/50*100)+'%';$('feedback').classList.add('hidden');$('next').classList.add('hidden');if(z[5]){$('passage').textContent='📖 Baca petikan:\\n\\n'+z[5];$('passage').classList.remove('hidden')}else $('passage').classList.add('hidden');$('answers').innerHTML='';z[2].forEach((v,n)=>{let b=document.createElement('button');b.className='ans';b.textContent=String.fromCharCode(65+n)+'. '+v;b.addEventListener('click',()=>pick(n,b));$('answers').appendChild(b)})}
+function pick(n,b){if(locked)return;locked=true;let z=Q[i],bs=[...$('answers').children];bs.forEach(x=>x.disabled=true);if(n===z[3]){streak++;correct++;let gain=streak>=3?15:10;score+=gain;b.classList.add('correct');$('feedback').textContent='✅ Tepat! +'+gain+' mata. '+(streak>=3?'🔥 Bonus streak! ':'')+z[4]}else{lives=Math.max(0,lives-1);streak=0;b.classList.add('wrong');bs[z[3]].classList.add('correct');$('feedback').textContent='❌ Belum tepat. '+z[4]}$('score').textContent=score;$('lives').textContent=lives;$('streak').textContent=streak;$('feedback').classList.remove('hidden');$('next').textContent=(i===49||lives<=0)?'Lihat Keputusan 🏆':'Cabaran Seterusnya ➜';$('next').classList.remove('hidden')}
+const RESULT_URL='https://script.google.com/macros/s/AKfycbwZK1MqEwcNu5Gyhn8cwWcGYGRBwQlu-1gw76rA-Rg08VF2EdU0V5G_KQVEOk6TK9O1Mw/exec';
+
+function decodeJwt(token){
+  try{
+    const base64Url=token.split('.')[1], base64=base64Url.replace(/-/g,'+').replace(/_/g,'/');
+    const json=decodeURIComponent(atob(base64).split('').map(c=>'%' + ('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+    return JSON.parse(json);
+  }catch(e){return null}
+}
+function handleCredentialResponse(response){
+  const p=decodeJwt(response.credential);
+  if(!p || !p.email){alert('Log masuk Google tidak berjaya. Sila cuba semula.');return}
+  userEmail=p.email;
+  userGoogleName=p.name||'';
+  $('loginEmail').textContent=userEmail;
+  $('loginPrompt').classList.add('hidden');
+  $('loginOk').classList.remove('hidden');
+  $('playerFields').classList.remove('hidden');
+  if(userGoogleName && !$('name').value) $('name').value=userGoogleName;
+}
+window.handleCredentialResponse=handleCredentialResponse;
+
+function hantarKeputusan(){
+ const masaSaat=Math.max(0,Math.floor((endTime-startTime)/1000));
+ fetch(RESULT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+   body:JSON.stringify({email:userEmail,nama:name,kelas:cls,betul:correct,mata:score,masaSaat:masaSaat})})
+ .then(r=>r.json()).then(d=>{
+   if(d.status==='success'){
+     $('sendStatus').textContent=d.ranked===false
+       ? '🎮 Percubaan latihan berjaya disimpan. Ranking utama kekal menggunakan percubaan pertama anda.'
+       : '✅ Percubaan pertama berjaya dihantar ke ranking utama.';
+   }else $('sendStatus').textContent='⚠️ Keputusan tidak dapat disimpan: '+(d.message||'Ralat');
+ })
+ .catch(()=>{$('sendStatus').textContent='⚠️ Keputusan belum dapat dihantar. Sila maklumkan kepada guru.';});
+}
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function formatSec(s){s=Number(s)||0;return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function loadRanking(targetId){
+ const box=$(targetId); box.classList.remove('hidden'); box.innerHTML='<p>⏳ Memuatkan ranking...</p>';
+ fetch(RESULT_URL+'?action=ranking&t='+Date.now())
+ .then(r=>r.json()).then(d=>{
+   if(d.status!=='success') throw new Error(d.message||'Ralat');
+   const rows=d.ranking||[];
+   let out='<h3>🏆 Ranking Utama</h3>';
+   if(!rows.length){box.innerHTML=out+'<p>Belum ada keputusan.</p>';return}
+   out+='<table><thead><tr><th>#</th><th>Nama</th><th>Kelas</th><th>Betul</th><th>Masa</th></tr></thead><tbody>';
+   rows.forEach((r,idx)=>{out+='<tr><td>'+(idx+1)+'</td><td>'+esc(r.nama)+'</td><td>'+esc(r.kelas)+'</td><td>'+esc(r.betul)+'/50</td><td>'+formatSec(r.masaSaat)+'</td></tr>'});
+   out+='</tbody></table>';
+   box.innerHTML=out;
+ }).catch(()=>{box.innerHTML='<p>⚠️ Ranking belum dapat dimuatkan. Pastikan Apps Script telah dikemas kini.</p>';});
+}
+
+function resetGame(){
+ i=0;score=0;lives=5;streak=0;correct=0;locked=false;startTime=0;endTime=0;
+ if(timerId){clearInterval(timerId);timerId=null}
+ $('result').classList.add('hidden');$('play').classList.add('hidden');
+ $('stats').classList.add('hidden');$('prog').classList.add('hidden');$('level').classList.add('hidden');
+ $('start').classList.remove('hidden');$('score').textContent='0';$('lives').textContent='5';$('streak').textContent='0';
+ $('counter').textContent='1/50';$('timer').textContent='00:00';$('bar').style.width='0%';
+ $('sendStatus').textContent='⏳ Menghantar keputusan...';
+ $('rankResult').classList.add('hidden');$('rankStart').classList.add('hidden');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function finish(){
+ endTime=Date.now();if(timerId){clearInterval(timerId);timerId=null}updateTimer();
+ $('play').classList.add('hidden');$('result').classList.remove('hidden');$('bar').style.width='100%';
+ $('who').textContent=(name||'Murid')+(cls?' • '+cls:'');$('final').textContent=score+' mata';
+ $('correctTotal').textContent='✅ '+correct+' daripada 50 jawapan betul';
+ $('timeResult').textContent='⏱️ Masa: '+formatTime(endTime-startTime);
+ let t,e;if(correct>=45){e='👑';t='Luar biasa! Anda MAHARAJA BAHASA!'}else if(correct>=35){e='🏆';t='Hebat! Anda berjaya menjadi Jaguh Bahasa!'}else if(correct>=25){e='🌟';t='Bagus! Teruskan latihan untuk menawan Kota Kata.'}else{e='💪';t='Misi telah tamat. Terima kasih kerana menyertai!'}
+ $('emoji').textContent=e;$('resultText').textContent=t;hantarKeputusan();
+}
+$('startBtn').addEventListener('click',()=>{
+ if(!userEmail){alert('Sila log masuk menggunakan akaun Google / DELIMa dahulu.');return}
+ name=$('name').value.trim();cls=$('className').value.trim();
+ if(!name){alert('Sila masukkan nama murid dahulu.');$('name').focus();return}
+ if(!cls){alert('Sila masukkan kelas dahulu.');$('className').focus();return}
+ $('start').classList.add('hidden');$('play').classList.remove('hidden');$('stats').classList.remove('hidden');
+ $('prog').classList.remove('hidden');$('level').classList.remove('hidden');startTime=Date.now();
+ $('timer').textContent='00:00';timerId=setInterval(updateTimer,250);draw();
+});
+$('next').addEventListener('click',()=>{i++;draw()});
+$('playAgain').addEventListener('click',resetGame);
+$('showRankStart').addEventListener('click',()=>loadRanking('rankStart'));
+$('showRankResult').addEventListener('click',()=>loadRanking('rankResult'));
+
+</script></body></html>
